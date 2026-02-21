@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Selector Config
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Select and copy gallery image links with customizable CSS selectors
 // @author       ali934h
 // @match        *://*/*
@@ -27,15 +27,53 @@
   let selectionMode = false;
   let galleryObserver = null;
   let sitesData = [];
+  let panelVisible = false;
+
+  // ─── Floating Toggle Button ───────────────────────────────────────────────
+  const floatBtn = document.createElement('button');
+  floatBtn.id = '__gallery-float-btn__';
+  floatBtn.textContent = '🔧';
+  floatBtn.title = 'Gallery Selector Config';
+  Object.assign(floatBtn.style, {
+    position:     'fixed',
+    bottom:       '20px',
+    right:        '20px',
+    zIndex:       '2147483647',
+    width:        '42px',
+    height:       '42px',
+    background:   '#1a1a1a',
+    border:       '2px solid #0cf',
+    borderRadius: '50%',
+    cursor:       'pointer',
+    fontSize:     '18px',
+    lineHeight:   '1',
+    boxShadow:    '0 2px 12px rgba(0,0,0,0.7)',
+    display:      'flex',
+    alignItems:   'center',
+    justifyContent: 'center',
+    padding:      '0',
+    transition:   'transform 0.2s, box-shadow 0.2s',
+  });
+
+  floatBtn.addEventListener('mouseenter', () => {
+    floatBtn.style.transform = 'scale(1.12)';
+    floatBtn.style.boxShadow = '0 4px 18px rgba(0,200,255,0.4)';
+  });
+  floatBtn.addEventListener('mouseleave', () => {
+    floatBtn.style.transform = 'scale(1)';
+    floatBtn.style.boxShadow = '0 2px 12px rgba(0,0,0,0.7)';
+  });
+
+  document.body.appendChild(floatBtn);
 
   // ─── UI Panel ─────────────────────────────────────────────────────────────
   const configPanel = document.createElement('div');
   configPanel.id = '__config-panel__';
   Object.assign(configPanel.style, {
     position:     'fixed',
-    top:          '12px',
+    bottom:       '72px',
     right:        '12px',
-    zIndex:       '2147483647',
+    zIndex:       '2147483646',
     background:   '#1a1a1a',
     border:       '2px solid #333',
     borderRadius: '8px',
@@ -46,6 +84,9 @@
     boxShadow:    '0 4px 20px rgba(0,0,0,0.8)',
     minWidth:     '280px',
     maxWidth:     '320px',
+    display:      'none',
+    transformOrigin: 'bottom right',
+    animation:    'none',
   });
 
   configPanel.innerHTML = `
@@ -103,6 +144,14 @@
   configPanel.appendChild(toolbar);
   document.body.appendChild(configPanel);
 
+  // ─── Float button toggle handler ──────────────────────────────────────────
+  floatBtn.addEventListener('click', () => {
+    panelVisible = !panelVisible;
+    configPanel.style.display = panelVisible ? 'block' : 'none';
+    floatBtn.style.background = panelVisible ? '#0a6' : '#1a1a1a';
+    floatBtn.style.borderColor = panelVisible ? '#0d8' : '#0cf';
+  });
+
   // ─── Wire inputs ──────────────────────────────────────────────────────────
   const presetSel    = document.getElementById('__preset-sel__');
   const inpCard      = document.getElementById('__card-sel__');
@@ -125,9 +174,7 @@
 
     showStatus('⏳ Loading presets...', true);
     fetch('https://gallery-security-selectors.pages.dev/public-api/sites', {
-      headers: {
-        'X-API-Key': API_KEY
-      }
+      headers: { 'X-API-Key': API_KEY }
     })
     .then(res => res.json())
     .then(data => {
@@ -154,7 +201,6 @@
   presetSel.addEventListener('change', () => {
     const selectedSite = presetSel.value;
     if (!selectedSite) return;
-
     const preset = sitesData.find(s => s.site === selectedSite);
     if (preset) {
       inpCard.value      = preset.cardSelector;
@@ -205,9 +251,9 @@
   });
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
-  function getCards()      { return document.querySelectorAll(config.cardSelector); }
-  function getContainer()  { return document.querySelector(config.containerSelector) || document.body; }
-  
+  function getCards()     { return document.querySelectorAll(config.cardSelector); }
+  function getContainer() { return document.querySelector(config.containerSelector) || document.body; }
+
   function getLinkFromCard(cardEl) {
     let selector = config.linkSelector;
     // If starts with combinator, add :scope prefix
@@ -221,13 +267,9 @@
   // ─── KEY FIX: force card to be a proper positioning context ───────────────
   function prepareCard(cardEl) {
     const cs = getComputedStyle(cardEl);
-
-    // Force relative positioning so absolute children are anchored here
     if (cs.position === 'static') {
       cardEl.style.position = 'relative';
     }
-
-    // Force overflow visible so the checkbox badge is never clipped
     if (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.overflowY === 'hidden') {
       cardEl.dataset.__origOverflow__ = cs.overflow;
       cardEl.style.overflow = 'visible';
@@ -249,50 +291,44 @@
 
     prepareCard(cardEl);
 
-    // Checkbox badge
     const badge = document.createElement('div');
     badge.className = '__gallery-cb__';
     Object.assign(badge.style, {
-      position:    'absolute',
-      top:         '6px',
-      left:        '6px',
-      zIndex:      '2147483646',
-      background:  'rgba(0,0,0,.65)',
-      borderRadius:'5px',
-      padding:     '4px 5px',
-      lineHeight:  '0',
+      position:      'absolute',
+      top:           '6px',
+      left:          '6px',
+      zIndex:        '2147483646',
+      background:    'rgba(0,0,0,.65)',
+      borderRadius:  '5px',
+      padding:       '4px 5px',
+      lineHeight:    '0',
       pointerEvents: 'none',
     });
 
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     Object.assign(cb.style, {
-      display:      'block',
-      width:        '18px',
-      height:       '18px',
-      margin:       '0',
-      cursor:       'pointer',
-      accentColor:  '#0cf',
-      pointerEvents:'auto',
+      display:       'block',
+      width:         '18px',
+      height:        '18px',
+      margin:        '0',
+      cursor:        'pointer',
+      accentColor:   '#0cf',
+      pointerEvents: 'auto',
     });
 
     badge.appendChild(cb);
     cardEl.appendChild(badge);
 
-    // Selected highlight
     cb.addEventListener('change', () => {
       cardEl.style.outline       = cb.checked ? '3px solid #0cf' : '';
       cardEl.style.outlineOffset = cb.checked ? '2px' : '';
     });
 
-    // Click anywhere on card = toggle checkbox + block navigation
     const clickHandler = (e) => {
-      // If user clicked the checkbox directly, let it handle itself
       if (e.target === cb) return;
-
       e.preventDefault();
       e.stopImmediatePropagation();
-
       cb.checked = !cb.checked;
       cb.dispatchEvent(new Event('change'));
     };
@@ -307,9 +343,9 @@
     if (!data) return;
     data.badge.remove();
     cardEl.removeEventListener('click', data.clickHandler, true);
-    cardEl.style.cursor       = '';
-    cardEl.style.outline      = '';
-    cardEl.style.outlineOffset= '';
+    cardEl.style.cursor        = '';
+    cardEl.style.outline       = '';
+    cardEl.style.outlineOffset = '';
     restoreCard(cardEl);
     attached.delete(cardEl);
   }
@@ -388,7 +424,7 @@
     btn.textContent = msg;
     btn.style.background = '#0a6';
     setTimeout(() => {
-      btn.textContent    = orig;
+      btn.textContent      = orig;
       btn.style.background = selectionMode && btn === btnToggle ? '#0a6' : '#222';
     }, 2000);
   }
