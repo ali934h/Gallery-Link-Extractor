@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Gallery Selector Config
+// @name         Gallery Link Extractor
 // @namespace    http://tampermonkey.net/
 // @version      1.1
 // @description  Select and copy gallery image links with customizable CSS selectors
@@ -29,11 +29,11 @@
   let sitesData = [];
   let panelVisible = false;
 
-  // ─── Floating Toggle Button ───────────────────────────────────────────────
+  // ─── Floating Toggle Button ──────────────────────────────────────────────────
   const floatBtn = document.createElement('button');
   floatBtn.id = '__gallery-float-btn__';
   floatBtn.textContent = '🔧';
-  floatBtn.title = 'Gallery Selector Config';
+  floatBtn.title = 'Gallery Link Extractor';
   Object.assign(floatBtn.style, {
     position:     'fixed',
     bottom:       '20px',
@@ -90,7 +90,7 @@
   });
 
   configPanel.innerHTML = `
-    <div style="font-weight:600;margin-bottom:8px;color:#0cf;">🔧 Gallery Selector Config</div>
+    <div style="font-weight:600;margin-bottom:8px;color:#0cf;">🔧 Gallery Link Extractor</div>
 
     <div style="margin-bottom:10px;">
       <label style="display:block;margin-bottom:4px;font-weight:500;">Preset Sites</label>
@@ -144,7 +144,7 @@
   configPanel.appendChild(toolbar);
   document.body.appendChild(configPanel);
 
-  // ─── Float button toggle handler ──────────────────────────────────────────
+  // ─── Float button toggle handler ─────────────────────────────────────────────
   floatBtn.addEventListener('click', () => {
     panelVisible = !panelVisible;
     configPanel.style.display = panelVisible ? 'block' : 'none';

@@ -1,9 +1,10 @@
-# Gallery Selector Config
+# Gallery Link Extractor
 
 A powerful userscript for selecting and copying gallery image links with customizable CSS selectors.
 
 ## Features
 
+- **Floating Toggle Button**: Compact interface that stays out of your way - click 🔧 to show/hide the control panel
 - **Custom CSS Selectors**: Configure card, link, and container selectors to match any gallery layout
 - **Preset Sites Support**: Load pre-configured selectors from a centralized API
 - **Selection Mode**: Click cards to select/deselect them with visual feedback
@@ -11,6 +12,7 @@ A powerful userscript for selecting and copying gallery image links with customi
 - **Test Configuration**: Validate your selectors before applying
 - **Lazy-load Support**: Automatically detects and handles dynamically loaded content
 - **Smart Selector Handling**: Automatically handles complex CSS selectors including combinators
+- **Mobile Friendly**: Floating button design works great on mobile devices
 
 ## Installation
 
@@ -44,12 +46,13 @@ A powerful userscript for selecting and copying gallery image links with customi
 ### Quick Start
 
 1. Navigate to any website with image galleries
-2. A configuration panel will appear in the top-right corner
+2. Click the floating 🔧 button in the bottom-right corner to open the control panel
 3. Use preset sites (if available) or configure custom selectors
 4. Click "Apply" to save your configuration
 5. Click "☑ Select" to enter selection mode
 6. Click on gallery items to select them
 7. Click "⧉ Copy Links" to copy selected links (or all links if none selected)
+8. Click the 🔧 button again to hide the panel and free up screen space
 
 ### Configuration Options
 
@@ -144,6 +147,12 @@ For more information on setting up your own API, see [Gallery Security Selectors
 - Verify your API key is correctly set
 - Check browser console for network errors
 - Ensure you have internet connectivity
+
+### Button Not Visible
+
+- Check if the 🔧 button is overlapped by site elements
+- The button is positioned at `bottom: 20px; right: 20px`
+- You can modify the position in the script if needed
 
 ## Contributing
 
