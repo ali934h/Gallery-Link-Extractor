@@ -26,7 +26,7 @@ A powerful userscript for selecting and copying gallery image links with customi
 ### Setup
 
 1. **Get Your API Key**
-   - Visit the [Gallery Security Selectors Panel](https://github.com/ali934h/Gallery-Security-Selectors)
+   - Visit the [CSS Selector Panel](https://github.com/ali934h/CSS-Selector-Panel)
    - Follow the instructions to set up your own panel and obtain an API key
 
 2. **Install the Script**
@@ -38,7 +38,7 @@ A powerful userscript for selecting and copying gallery image links with customi
    - Edit the installed script in your userscript manager
    - Replace `YOUR_API_KEY` with your actual API key:
    ```javascript
-   const API_KEY = 'gss_YOUR_ACTUAL_KEY_HERE';
+   const API_KEY = 'YOUR_ACTUAL_KEY_HERE';
    ```
 
 ## Usage
@@ -107,7 +107,7 @@ This allows you to use child combinators (`>`) at the beginning of link selector
 
 The script fetches preset configurations from:
 ```
-https://gallery-security-selectors.pages.dev/public-api/sites
+https://css-selector-panel.pages.dev/public-api/sites
 ```
 
 Expected API response format:
@@ -126,7 +126,7 @@ Expected API response format:
 }
 ```
 
-For more information on setting up your own API, see [Gallery Security Selectors](https://github.com/ali934h/Gallery-Security-Selectors).
+For more information on setting up your own API, see [CSS Selector Panel](https://github.com/ali934h/CSS-Selector-Panel).
 
 ## Troubleshooting
 
@@ -170,7 +170,7 @@ MIT License - feel free to use and modify as needed.
 
 ## Related Projects
 
-- [Gallery Security Selectors](https://github.com/ali934h/Gallery-Security-Selectors) - API panel for managing site configurations
+- [CSS Selector Panel](https://github.com/ali934h/CSS-Selector-Panel) - API panel for managing site configurations
 
 ## Author
 

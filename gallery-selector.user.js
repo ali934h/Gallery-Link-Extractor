@@ -13,7 +13,7 @@
 
   // ────────────────────────────────────────────────────────────────────────────
   // CONFIGURATION: Replace YOUR_API_KEY with your actual API key
-  // Get your API key from: https://github.com/ali934h/Gallery-Security-Selectors
+  // Get your API key from: https://github.com/ali934h/CSS-Selector-Panel
   // ────────────────────────────────────────────────────────────────────────────
   const API_KEY = 'YOUR_API_KEY'; // Replace this with your actual API key
 
@@ -29,7 +29,7 @@
   let sitesData = [];
   let panelVisible = false;
 
-  // ─── Floating Toggle Button ──────────────────────────────────────────────────
+  // ─── Floating Toggle Button ───────────────────────────────────────────────
   const floatBtn = document.createElement('button');
   floatBtn.id = '__gallery-float-btn__';
   floatBtn.textContent = '🔧';
@@ -173,7 +173,7 @@
     }
 
     showStatus('⏳ Loading presets...', true);
-    fetch('https://gallery-security-selectors.pages.dev/public-api/sites', {
+    fetch('https://css-selector-panel.pages.dev/public-api/sites', {
       headers: { 'X-API-Key': API_KEY }
     })
     .then(res => res.json())
